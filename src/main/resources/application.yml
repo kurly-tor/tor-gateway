@@ -1,0 +1,50 @@
+server:
+  port: 8088
+---
+logging:
+  file:
+    name: tor-gateway.log
+  level:
+    reactor:
+      netty: DEBUG
+    org:
+      springframework:
+        cloud:
+          gateway: DEBUG
+---
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - name: GlobalFilter
+          args:
+            preLogger: true
+            postLogger: true
+      routes:
+        - id: user-svc
+          uri: http://tor-backend-svc:9000
+          predicates:
+            - Path=/api/**
+          filters:
+            - name: UserFilter
+              args:
+                baseMessage: Spring Cloud Gateway UserFilter
+                preLogger: true
+                postLogger: true
+          metadata:
+            connect-timeout: 2500
+            response-timeout: 2500
+        - id: ui-svc
+          uri: http://tor-frontend-svc:3000
+          predicates:
+            - Path=/**
+          filters:
+            - name: UserFilter
+              args:
+                 baseMessage: Spring Cloud Gateway UI-Filter
+                 preLogger: true
+                 postLogger: true
+          metadata:
+            connect-timeout: 2500
+            response-timeout: 2500
+

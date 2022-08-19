@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: tor
+  name: tor-gateway-deploy
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+       app: tor-gateway
+  template:
+    metadata:
+      labels:
+         app: tor-gateway
+    spec:
+      containers:
+      - name: tor-gateway
+        image: hhlee7175/tor-gateway:0.1
+        ports:
+        - name: gateway-port
+          containerPort: 8088
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: tz-seoul
+          mountPath: /etc/localtime
+      volumes:
+      - name: tz-seoul
+        hostPath:
+          path: /usr/share/zoneinfo/Asia/Seoul
+
