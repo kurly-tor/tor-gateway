@@ -2,7 +2,7 @@ name: Deploy in K8S
 
 on:
   push:
-    branches: [action_test,develop,master]
+    branches: [action_test]
   pull_request:
     branches: [master]
 
